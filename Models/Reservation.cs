@@ -1,9 +1,7 @@
 namespace HotelReservation.Models;
 
-// SRP VIOLATION (Example 3): This class serves THREE actors:
-// - Receptionist: lifecycle (Cancel, Status management)
-// - Accountant: billing (CalculateTotal, GenerateInvoiceLine)
-// - Housekeeper: cleaning schedule (GetLinenChangeDays)
+// Reservation now focuses on a single actor: receptionist lifecycle.
+// Billing and housekeeping responsibilities were extracted to dedicated services.
 
 public class Reservation
 {
@@ -27,39 +25,4 @@ public class Reservation
         Status = "Cancelled";
     }
 
-    // Actor: ACCOUNTANT — pricing rules (TVA, tourist tax)
-    public decimal CalculateTotal()
-    {
-        var nights = (CheckOut - CheckIn).Days;
-        var pricePerNight = RoomType switch
-        {
-            "Standard" => 80m,
-            "Suite" => 200m,
-            "Family" => 120m,
-            _ => 0m
-        };
-        var subtotal = nights * pricePerNight;
-        var tva = subtotal * 0.10m;
-        var touristTax = GuestCount * nights * 1.50m;
-        return subtotal + tva + touristTax;
-    }
-
-    // Actor: HOUSEKEEPER — linen change schedule
-    public List<DateTime> GetLinenChangeDays()
-    {
-        var days = new List<DateTime>();
-        var current = CheckIn.AddDays(3);
-        while (current < CheckOut)
-        {
-            days.Add(current);
-            current = current.AddDays(3);
-        }
-        return days;
-    }
-
-    // Actor: ACCOUNTANT — invoice format
-    public string GenerateInvoiceLine()
-    {
-        return $"{GuestName} | {CheckIn:dd/MM} -> {CheckOut:dd/MM} | {CalculateTotal():F2} EUR";
-    }
 }
