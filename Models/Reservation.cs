@@ -3,7 +3,7 @@ namespace HotelReservation.Models;
 // Reservation now focuses on a single actor: receptionist lifecycle.
 // Billing and housekeeping responsibilities were extracted to dedicated services.
 
-public class Reservation
+public class Reservation : IInvoiceReservationData
 {
     public string Id { get; set; } = string.Empty;
     public string GuestName { get; set; } = string.Empty;

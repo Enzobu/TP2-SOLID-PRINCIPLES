@@ -2,15 +2,10 @@ namespace HotelReservation.Services;
 
 using HotelReservation.Models;
 
-// ISP VIOLATION (Example 2): This class takes a full Reservation object but
-// only uses 5 fields (GuestName, CheckIn, CheckOut, RoomType, GuestCount).
-// It is coupled to changes in Reservation even if those changes are irrelevant.
 public class InvoiceGenerator
 {
-    public Invoice Generate(Reservation reservation)
+    public Invoice Generate(IInvoiceReservationData reservation)
     {
-        // Only uses: GuestName, CheckIn, CheckOut, RoomType, GuestCount, RoomId
-        // Does NOT use: Status, CancellationPolicy, Email, TotalPrice, Id
         var nights = (reservation.CheckOut - reservation.CheckIn).Days;
         var pricePerNight = reservation.RoomType switch
         {
@@ -37,7 +32,7 @@ public class InvoiceGenerator
         };
     }
 
-    public void PrintInvoice(Invoice invoice, Reservation reservation)
+    public void PrintInvoice(Invoice invoice, IInvoiceReservationData reservation)
     {
         Console.WriteLine($"Invoice for {invoice.GuestName}:");
         Console.WriteLine($"  Room: {invoice.RoomDescription}, " +
